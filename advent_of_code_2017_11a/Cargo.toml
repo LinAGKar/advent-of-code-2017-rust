@@ -1,0 +1,6 @@
+[package]
+name = "advent_of_code_2017_11a"
+version = "0.1.0"
+authors = ["Linus <Kardell>"]
+
+[dependencies]
