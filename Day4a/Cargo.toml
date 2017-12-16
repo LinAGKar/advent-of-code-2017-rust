@@ -1,0 +1,6 @@
+[package]
+name = "Day4a"
+version = "0.1.0"
+authors = ["Linus <Kardell>"]
+
+[dependencies]

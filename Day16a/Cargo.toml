@@ -1,0 +1,6 @@
+[package]
+name = "Day16a"
+version = "0.1.0"
+authors = ["Linus <Kardell>"]
+
+[dependencies]

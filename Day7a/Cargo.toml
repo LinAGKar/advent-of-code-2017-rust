@@ -1,0 +1,7 @@
+[package]
+name = "Day7a"
+version = "0.1.0"
+authors = ["Linus <Kardell>"]
+
+[dependencies]
+regex = "0.2"
