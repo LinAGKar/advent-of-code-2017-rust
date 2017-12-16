@@ -1,6 +1,0 @@
-[package]
-name = "Day1b"
-version = "0.1.0"
-authors = ["Linus Kardell <linus.kardell@gmail.com>"]
-
-[dependencies]
