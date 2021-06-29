@@ -1,13 +1,11 @@
 use std::collections::HashMap;
 use std::io;
 
-
 struct CoordinateMap {
     x: i64,
     y: i64,
     values: HashMap<(i64, i64), u64>,
 }
-
 
 impl CoordinateMap {
     fn new() -> CoordinateMap {
@@ -48,7 +46,6 @@ impl CoordinateMap {
         greater
     }
 }
-
 
 fn main() {
     let mut string = String::new();

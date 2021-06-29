@@ -5,7 +5,6 @@ use std::collections::HashMap;
 use std::io;
 use std::io::Read;
 
-
 fn gcd(a: i64, b: i64) -> i64 {
     if b == 0 {
         a
@@ -16,11 +15,9 @@ fn gcd(a: i64, b: i64) -> i64 {
     }
 }
 
-
 fn lcm(a: i64, b: i64) -> i64 {
     (a * b).abs() / gcd(a, b)
 }
-
 
 fn main() {
     let mut input = String::new();

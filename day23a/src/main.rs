@@ -1,18 +1,15 @@
 extern crate regex;
 
-
 use regex::Regex;
 use std::collections::HashMap;
 use std::io;
 use std::io::Read;
-
 
 #[derive(Debug, Clone, Copy)]
 enum Value {
     Num(i64),
     Reg(char),
 }
-
 
 #[derive(Debug, Clone, Copy)]
 enum Instr {
@@ -22,14 +19,12 @@ enum Instr {
     Jnz(Value, Value),
 }
 
-
 fn get_val(val: &Value, regs: &HashMap<char, i64>) -> Option<i64> {
     match *val {
         Value::Num(v) => Some(v),
         Value::Reg(v) => regs.get(&v).map(|&x| x),
     }
 }
-
 
 fn main() {
     let mut input = String::new();

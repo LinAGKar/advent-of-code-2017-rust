@@ -4,7 +4,6 @@ use regex::Regex;
 use std::io;
 use std::str;
 
-
 fn main() {
     let mut input = String::new();
     io::stdin().read_line(&mut input).unwrap();

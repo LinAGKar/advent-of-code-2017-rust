@@ -6,13 +6,11 @@ use std::collections::VecDeque;
 use std::io;
 use std::io::Read;
 
-
 #[derive(Debug)]
 enum Value {
     Reg(char),
     Num(i64),
 }
-
 
 #[derive(Debug)]
 enum Instr {
@@ -25,13 +23,11 @@ enum Instr {
     JGZ(Value, Value),
 }
 
-
 struct Program<'a> {
     pc: i64,
     regs: HashMap<char, i64>,
     instructions: &'a Vec<Instr>,
 }
-
 
 impl<'a> Program<'a> {
     fn new(instructions: &'a Vec<Instr>, number: i64) -> Program<'a> {
@@ -42,14 +38,12 @@ impl<'a> Program<'a> {
         }
     }
 
-
     fn get_val(&self, x: &Value) -> i64 {
         match *x {
             Value::Reg(r) => self.regs[&r],
             Value::Num(v) => v,
         }
     }
-
 
     fn execute(&mut self, output: &mut VecDeque<i64>, input: &mut VecDeque<i64>) -> bool {
         while let Some(instr) = self.instructions.get(if self.pc < 0 { usize::max_value() } else { self.pc as usize }) {
@@ -94,7 +88,6 @@ impl<'a> Program<'a> {
         true
     }
 }
-
 
 fn main() {
     let mut input = String::new();

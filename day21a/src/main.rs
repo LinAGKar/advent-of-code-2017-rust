@@ -5,11 +5,9 @@ use std::collections::HashMap;
 use std::io;
 use std::io::Read;
 
-
 fn string_to_grid(x: &str) -> Vec<bool> {
     x.chars().filter_map(|x| match x { '#' => Some(true), '.' => Some(false), _ => None }).collect()
 }
-
 
 fn rotate(input: &Vec<bool>) -> Vec<bool> {
     let size_f = (input.len() as f64).sqrt();
@@ -26,7 +24,6 @@ fn rotate(input: &Vec<bool>) -> Vec<bool> {
     }).collect()
 }
 
-
 fn flip(input: &Vec<bool>) -> Vec<bool> {
     let size_f = (input.len() as f64).sqrt();
     let size = size_f as usize;
@@ -40,7 +37,6 @@ fn flip(input: &Vec<bool>) -> Vec<bool> {
         input[y * size + old_x]
     }).collect()
 }
-
 
 fn main() {
     let mut input = String::new();

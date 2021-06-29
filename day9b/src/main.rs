@@ -2,7 +2,6 @@ use std::io;
 use std::io::Read;
 use std::str::Chars;
 
-
 #[derive(Debug)]
 enum Token {
     Garbage(String),
@@ -12,11 +11,9 @@ enum Token {
     Invalid,
 }
 
-
 struct Tokens<'t> {
     chars: Chars<'t>,
 }
-
 
 impl<'t> Iterator for Tokens<'t> {
     type Item = Token;
@@ -63,11 +60,9 @@ impl<'t> Iterator for Tokens<'t> {
     }
 }
 
-
 trait Tokenizer {
     fn tokens<'t>(&'t self) -> Tokens<'t>;
 }
-
 
 impl Tokenizer for str {
     fn tokens<'t>(&'t self) -> Tokens<'t> {
@@ -76,8 +71,6 @@ impl Tokenizer for str {
         }
     }
 }
-
-
 
 fn main() {
     let mut input = String::new();

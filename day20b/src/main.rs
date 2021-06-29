@@ -7,7 +7,6 @@ use std::f64;
 use std::io;
 use std::io::Read;
 
-
 #[derive(Debug, Clone, Copy)]
 struct Vec3 {
     x: f64,
@@ -15,11 +14,9 @@ struct Vec3 {
     z: f64,
 }
 
-
 fn approx_eq(a: f64, b: f64) -> bool {
     a * 0.9999999999999 < b && b < a * 1.0000000000001
 }
-
 
 fn intersections(p_1: f64, v_1: f64, a_1: f64, p_2: f64, v_2: f64, a_2: f64) -> Vec<f64> {
     if a_1 != a_2 {
@@ -45,7 +42,6 @@ fn intersections(p_1: f64, v_1: f64, a_1: f64, p_2: f64, v_2: f64, a_2: f64) -> 
         }
     }
 }
-
 
 fn eq_or_nan(a: f64, b: f64, c: f64) -> Option<f64> {
     if a.is_nan() {
@@ -79,14 +75,12 @@ fn eq_or_nan(a: f64, b: f64, c: f64) -> Option<f64> {
     }
 }
 
-
 #[derive(Debug, Clone, Copy)]
 struct Particle {
     pos: Vec3,
     vel: Vec3,
     acc: Vec3,
 }
-
 
 impl Particle {
     fn intersects(&self, other: &Particle) -> Option<i64> {
@@ -109,7 +103,6 @@ impl Particle {
         i.iter().next().map(|&x| x)
     }
 }
-
 
 fn main() {
     let mut input = String::new();

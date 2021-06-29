@@ -5,13 +5,11 @@ use std::collections::HashMap;
 use std::io;
 use std::io::Read;
 
-
 #[derive(Debug)]
 enum Value {
     Reg(char),
     Num(i64),
 }
-
 
 #[derive(Debug)]
 enum Instr {
@@ -24,14 +22,12 @@ enum Instr {
     JGZ(Value, Value),
 }
 
-
 fn get_val(regs: &HashMap<char, i64>, x: &Value) -> i64 {
     match *x {
         Value::Reg(r) => regs[&r],
         Value::Num(v) => v,
     }
 }
-
 
 fn main() {
     let mut input = String::new();

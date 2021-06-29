@@ -5,7 +5,6 @@ use std::cmp::Ordering::Equal;
 use std::io;
 use std::io::Read;
 
-
 fn longest(comps: &Vec<(u64, u64)>, used: &mut Vec<bool>, end: u64, length: u64) -> (u64, u64) {
     let to_check: Vec<(usize, &(u64, u64))> = comps.iter().enumerate().filter(|&(n, &(a, b))| !used[n] && (a == end || b == end)).collect();
     to_check.iter().map(|&(n, &(a, b))| {
@@ -19,7 +18,6 @@ fn longest(comps: &Vec<(u64, u64)>, used: &mut Vec<bool>, end: u64, length: u64)
         x => x,
     }).unwrap_or((length, 0))
 }
-
 
 fn main() {
     let mut input = String::new();

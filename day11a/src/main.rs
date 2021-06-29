@@ -1,7 +1,6 @@
 use std::io;
 use std::ops::Add;
 
-
 #[derive(Debug, PartialEq)]
 struct Vec3 {
     x: i64,
@@ -9,13 +8,11 @@ struct Vec3 {
     z: i64,
 }
 
-
 impl Vec3 {
     fn euclid_abs(&self) -> i64 {
         self.x.abs() + self.y.abs() + self.z.abs()
     }
 }
-
 
 impl Add for Vec3 {
     type Output = Vec3;
@@ -28,8 +25,6 @@ impl Add for Vec3 {
         }
     }
 }
-
-
 
 fn main() {
     let mut input = String::new();

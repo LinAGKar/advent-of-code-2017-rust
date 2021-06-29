@@ -7,7 +7,6 @@ use std::str;
 
 const LENGTH: usize = 16;
 
-
 fn calc_dance(mapping: &[usize]) -> Vec<usize> {
     let mut state: Vec<usize> = (0..LENGTH).collect();
     let start: Vec<usize> = (0..LENGTH).collect();
@@ -22,7 +21,6 @@ fn calc_dance(mapping: &[usize]) -> Vec<usize> {
     }
     state
 }
-
 
 fn main() {
     let mut input = String::new();

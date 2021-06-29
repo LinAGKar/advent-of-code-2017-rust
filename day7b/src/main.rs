@@ -6,7 +6,6 @@ use std::collections::HashSet;
 use std::io;
 use std::io::Read;
 
-
 #[derive(Debug)]
 struct Node {
     name: String,
@@ -14,7 +13,6 @@ struct Node {
     own_weight: i64,
     children: Vec<Node>,
 }
-
 
 impl Node {
     fn new(name: &str, programs: &HashMap<String, (i64, HashSet<String>)>) -> Node {
@@ -86,7 +84,6 @@ impl Node {
         }
     }
 }
-
 
 fn main() {
     let mut string = String::new();

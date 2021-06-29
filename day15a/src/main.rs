@@ -1,12 +1,10 @@
 use std::io;
 use std::io::Read;
 
-
 struct Generator {
     num: i64,
     factor: i64,
 }
-
 
 impl Iterator for Generator {
     type Item = i64;
@@ -16,7 +14,6 @@ impl Iterator for Generator {
         Some(self.num)
     }
 }
-
 
 fn main() {
     let mut input = String::new();

@@ -1,6 +1,5 @@
 use std::io;
 
-
 fn knot_hash(input: &Vec<u8>) -> Vec<u8> {
     let mut skip_size = 0;
     let mut pos = 0;
@@ -20,7 +19,6 @@ fn knot_hash(input: &Vec<u8>) -> Vec<u8> {
     }
     (0..16).map(|x| list[x * 16..(x + 1) * 16].iter().fold(0, |acc, &y| acc ^ y)).collect()
 }
-
 
 fn main() {
     let mut input = String::new();

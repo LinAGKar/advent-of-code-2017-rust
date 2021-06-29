@@ -1,6 +1,5 @@
 // Hardcoded solution for my input
 
-
 fn main() {
     let mut number_of_non_primes = 0;
     let mut curr = 109300;

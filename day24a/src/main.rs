@@ -4,7 +4,6 @@ use regex::Regex;
 use std::io;
 use std::io::Read;
 
-
 fn strongest(comps: &Vec<(u64, u64)>, used: &mut Vec<bool>, end: u64) -> u64 {
     let to_check: Vec<(usize, &(u64, u64))> = comps.iter().enumerate().filter(|&(n, &(a, b))| !used[n] && (a == end || b == end)).collect();
     to_check.iter().map(|&(n, &(a, b))| {
@@ -14,7 +13,6 @@ fn strongest(comps: &Vec<(u64, u64)>, used: &mut Vec<bool>, end: u64) -> u64 {
         res
     }).max().unwrap_or(0)
 }
-
 
 fn main() {
     let mut input = String::new();

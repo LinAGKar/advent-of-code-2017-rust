@@ -3,14 +3,12 @@ use std::collections::vec_deque::VecDeque;
 use std::io;
 use std::io::Read;
 
-
 #[derive(Debug)]
 struct Instr {
     write: bool,
     motion: i64,
     next_state: char,
 }
-
 
 impl Instr {
     fn new() -> Instr {
@@ -21,7 +19,6 @@ impl Instr {
         }
     }
 }
-
 
 fn main() {
     let mut input = String::new();
@@ -68,7 +65,6 @@ fn main() {
                 9 => {
                     states.get_mut(&reading_state).unwrap().1.next_state = i.split_whitespace().nth(4).unwrap().chars().next().unwrap();
                 }
-
 
                 _ => {}
             }

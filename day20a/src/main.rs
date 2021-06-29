@@ -7,7 +7,6 @@ use std::io::Read;
 use std::ops::Mul;
 use std::ops::AddAssign;
 
-
 #[derive(Debug, Eq, Clone, Copy)]
 struct Vec3 {
     x: i64,
@@ -15,13 +14,11 @@ struct Vec3 {
     z: i64,
 }
 
-
 impl Vec3 {
     fn non_negative(&self) -> bool {
         self.x >= 0 && self.y >= 0 && self.z >= 0
     }
 }
-
 
 impl Ord for Vec3 {
     fn cmp(&self, other: &Vec3) -> Ordering {
@@ -29,21 +26,17 @@ impl Ord for Vec3 {
     }
 }
 
-
 impl PartialOrd for Vec3 {
     fn partial_cmp(&self, other: &Vec3) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-
 impl PartialEq for Vec3 {
     fn eq(&self, other: &Vec3) -> bool {
         self.cmp(other) == Ordering::Equal
     }
 }
-
-
 
 impl Mul for Vec3 {
     type Output = Vec3;
@@ -53,7 +46,6 @@ impl Mul for Vec3 {
     }
 }
 
-
 impl AddAssign for Vec3 {
     fn add_assign(&mut self, other: Vec3) {
         self.x += other.x;
@@ -62,7 +54,6 @@ impl AddAssign for Vec3 {
     }
 }
 
-
 #[derive(Debug, Clone, Copy, Eq)]
 struct Particle {
     pos: Vec3,
@@ -70,14 +61,12 @@ struct Particle {
     acc: Vec3,
 }
 
-
 impl Particle {
     fn step(&mut self) {
         self.vel += self.acc;
         self.pos += self.vel;
     }
 }
-
 
 impl Ord for Particle {
     fn cmp(&self, other: &Particle) -> Ordering {
@@ -103,20 +92,17 @@ impl Ord for Particle {
     }
 }
 
-
 impl PartialOrd for Particle {
     fn partial_cmp(&self, other: &Particle) -> Option<Ordering> {
         Some(self.cmp(other))
     }
 }
 
-
 impl PartialEq for Particle {
     fn eq(&self, other: &Particle) -> bool {
         match self.cmp(other) { Ordering::Equal => true, _ => false }
     }
 }
-
 
 fn main() {
     let mut input = String::new();
