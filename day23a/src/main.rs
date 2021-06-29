@@ -72,7 +72,7 @@ fn main() {
                 let val = get_val(&y, &regs).unwrap();
                 match regs.get_mut(&x) {
                     Some(x) => { *x -= val; }
-                    None => { panic!(format!("Could not find register {}", x)); }
+                    None => { panic!("Could not find register {}", x); }
                 }
             }
             Instr::Mul(x, y) => {
@@ -80,7 +80,7 @@ fn main() {
                 let val = get_val(&y, &regs).unwrap();
                 match regs.get_mut(&x) {
                     Some(x) => { *x *= val; }
-                    None => { panic!(format!("Could not find register {}", x)); }
+                    None => { panic!("Could not find register {}", x); }
                 }
             }
             Instr::Jnz(x, y) => {
