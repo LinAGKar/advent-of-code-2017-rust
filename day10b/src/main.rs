@@ -21,5 +21,5 @@ fn main() {
             skip_size += 1;
         }
     }
-    println!("{}", (0..16).map(|x| list[x * 16..(x + 1) * 16].iter().fold(0, |acc, &y| acc ^ y)).map(|x| format!("{:02X}", x)).collect::<Vec<String>>().join(""));
+    println!("{}", (0..16).map(|x| list[x * 16..(x + 1) * 16].iter().fold(0, |acc, &y| acc ^ y)).map(|x| format!("{:02x}", x)).collect::<Vec<String>>().join(""));
 }
