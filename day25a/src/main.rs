@@ -47,11 +47,13 @@ fn main() {
                 }
 
                 4 => {
-                    states.get_mut(&reading_state).unwrap().0.motion = if i.split_whitespace().nth(6).unwrap() == "right." { 1 } else { -1 };
+                    states.get_mut(&reading_state).unwrap().0.motion =
+                        if i.split_whitespace().nth(6).unwrap() == "right." { 1 } else { -1 };
                 }
 
                 5 => {
-                    states.get_mut(&reading_state).unwrap().0.next_state = i.split_whitespace().nth(4).unwrap().chars().next().unwrap();
+                    states.get_mut(&reading_state).unwrap().0.next_state =
+                        i.split_whitespace().nth(4).unwrap().chars().next().unwrap();
                 }
 
                 7 => {
@@ -59,11 +61,13 @@ fn main() {
                 }
 
                 8 => {
-                    states.get_mut(&reading_state).unwrap().1.motion = if i.split_whitespace().nth(6).unwrap() == "right." { 1 } else { -1 };
+                    states.get_mut(&reading_state).unwrap().1.motion =
+                        if i.split_whitespace().nth(6).unwrap() == "right." { 1 } else { -1 };
                 }
 
                 9 => {
-                    states.get_mut(&reading_state).unwrap().1.next_state = i.split_whitespace().nth(4).unwrap().chars().next().unwrap();
+                    states.get_mut(&reading_state).unwrap().1.next_state =
+                        i.split_whitespace().nth(4).unwrap().chars().next().unwrap();
                 }
 
                 _ => {}

@@ -92,7 +92,9 @@ impl<'a> Program<'a> {
 fn main() {
     let mut input = String::new();
     io::stdin().read_to_string(&mut input).expect("Failed to get input");
-    let re = Regex::new(r"snd ([a-z])|set ([a-z]) ([a-z]|-?\d+)|add ([a-z]) ([a-z]|-?\d+)|mul ([a-z]) ([a-z]|-?\d+)|mod ([a-z]) ([a-z]|-?\d+)|rcv ([a-w])|jgz ([a-z]|-?\d+) ([a-z]|-?\d+)").unwrap();
+    let re = Regex::new(
+        r"snd ([a-z])|set ([a-z]) ([a-z]|-?\d+)|add ([a-z]) ([a-z]|-?\d+)|mul ([a-z]) ([a-z]|-?\d+)|mod ([a-z]) ([a-z]|-?\d+)|rcv ([a-w])|jgz ([a-z]|-?\d+) ([a-z]|-?\d+)",
+    ).unwrap();
     let instructions: Vec<Instr> = re.captures_iter(&input).filter_map(|caps| {
         if let Some(x) = caps.get(1) {
             Some(Instr::SND(x.as_str().chars().next().unwrap()))

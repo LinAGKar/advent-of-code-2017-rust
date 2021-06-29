@@ -25,7 +25,14 @@ fn main() {
     io::stdin().read_line(&mut input).unwrap();
     println!("{}",
         (0..128).map(
-            |x| knot_hash(&format!("{}-{}", input.trim(), x).bytes().collect()).iter().map(|y| (0..8).fold(0, |acc, z| acc + ((y >> z) & 1u8) as i32) ).fold(0, |acc, y| acc + y)
+            |x| knot_hash(&format!(
+                "{}-{}",
+                input.trim(),
+                x,
+            ).bytes().collect())
+                .iter()
+                .map(|y| (0..8).fold(0, |acc, z| acc + ((y >> z) & 1u8) as i32))
+                .fold(0, |acc, y| acc + y)
         ).fold(0, |acc, x| acc + x)
     );
 }

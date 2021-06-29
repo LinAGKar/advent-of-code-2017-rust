@@ -107,7 +107,9 @@ impl Particle {
 fn main() {
     let mut input = String::new();
     io::stdin().read_to_string(&mut input).unwrap();
-    let re = Regex::new(r"p=<(-?\d+),(-?\d+),(-?\d+)>, v=<(-?\d+),(-?\d+),(-?\d+)>, a=<(-?\d+),(-?\d+),(-?\d+)>").unwrap();
+    let re = Regex::new(
+        r"p=<(-?\d+),(-?\d+),(-?\d+)>, v=<(-?\d+),(-?\d+),(-?\d+)>, a=<(-?\d+),(-?\d+),(-?\d+)>",
+    ).unwrap();
     let particles: Vec<Particle> = re.captures_iter(&input).map(|caps| Particle {
         pos: Vec3 { x: caps[1].parse().unwrap(), y: caps[2].parse().unwrap(), z: caps[3].parse().unwrap() },
         vel: Vec3 { x: caps[4].parse().unwrap(), y: caps[5].parse().unwrap(), z: caps[6].parse().unwrap() },

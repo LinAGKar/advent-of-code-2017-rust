@@ -38,12 +38,19 @@ fn main() {
             } else if let (Some(a), Some(b)) = (caps.get(2), caps.get(3)) {
                 programs.swap(a.as_str().parse().unwrap(), b.as_str().parse().unwrap());
             } else if let (Some(a), Some(b)) = (caps.get(4), caps.get(5)) {
-                indexes.swap(a.as_str().bytes().next().unwrap() as usize - 97, b.as_str().bytes().next().unwrap() as usize - 97);
+                indexes.swap(
+                    a.as_str().bytes().next().unwrap() as usize - 97,
+                    b.as_str().bytes().next().unwrap() as usize - 97,
+                );
             }
         }
     }
     programs = calc_dance(&programs);
-    let partner_swaps: HashMap<usize, usize> = calc_dance(&indexes).iter().enumerate().map(|(index, &val)| (val, index)).collect();
+    let partner_swaps: HashMap<usize, usize> = calc_dance(&indexes)
+        .iter()
+        .enumerate()
+        .map(|(index, &val)| (val, index))
+        .collect();
     let programs: Vec<u8> = programs.iter().map(|x| partner_swaps[x] as u8 + 97).collect();
     println!("{}", str::from_utf8(&programs).unwrap());
 }

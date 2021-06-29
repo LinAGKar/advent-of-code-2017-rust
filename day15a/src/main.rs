@@ -21,5 +21,8 @@ fn main() {
     let mut lines = input.lines();
     let start_a: i64 = lines.next().unwrap().split_whitespace().nth(4).unwrap().parse().unwrap();
     let start_b: i64 = lines.next().unwrap().split_whitespace().nth(4).unwrap().parse().unwrap();
-    println!("{}", Generator { num: start_a, factor: 16807 }.zip(Generator { num: start_b, factor: 48271 }).take(40000000).filter(|&(a, b)| a & 0xFFFF == b & 0xFFFF).count());
+    println!("{}", Generator {
+        num: start_a,
+        factor: 16807,
+    }.zip(Generator { num: start_b, factor: 48271 }).take(40000000).filter(|&(a, b)| a & 0xFFFF == b & 0xFFFF).count());
 }

@@ -16,7 +16,9 @@ struct Node {
 
 impl Node {
     fn new(name: &str, programs: &HashMap<String, (i64, HashSet<String>)>) -> Node {
-        let &(weight, ref children) = programs.get(name).expect(&format!("Did not find program {} in program list", name));
+        let &(weight, ref children) = programs.get(name).expect(
+            &format!("Did not find program {} in program list", name),
+        );
         let children: Vec<Node> = children.iter().map(|x| Node::new(x, programs)).collect();
         let total_weight = weight + children.iter().map(|x| x.weight).sum::<i64>();
         Node {
@@ -60,7 +62,13 @@ impl Node {
             _ => {
                 let mut result = None;
                 for i in self.children.iter().enumerate() {
-                    let differences: Vec<i64> = self.children.iter().enumerate().filter(|x| x.0 != i.0).map(|x| x.1.weight - i.1.weight).collect();
+                    let differences: Vec<i64> = self
+                        .children
+                        .iter()
+                        .enumerate()
+                        .filter(|x| x.0 != i.0)
+                        .map(|x| x.1.weight - i.1.weight)
+                        .collect();
                     let first = differences[0];
                     if differences.iter().any(|y| *y != first) {
                         continue;

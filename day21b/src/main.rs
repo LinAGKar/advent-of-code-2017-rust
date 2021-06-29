@@ -41,7 +41,9 @@ fn flip(input: &Vec<bool>) -> Vec<bool> {
 fn main() {
     let mut input = String::new();
     io::stdin().read_to_string(&mut input).unwrap();
-    let re = Regex::new(r"(?m)^([.#]{2}/[.#]{2}) => ([.#]{3}(?:/[.#]{3}){2})$|^([.#]{3}(?:/[.#]{3}){2}) => ([.#]{4}(?:/[.#]{4}){3})$").unwrap();
+    let re = Regex::new(
+        r"(?m)^([.#]{2}/[.#]{2}) => ([.#]{3}(?:/[.#]{3}){2})$|^([.#]{3}(?:/[.#]{3}){2}) => ([.#]{4}(?:/[.#]{4}){3})$",
+    ).unwrap();
     let mut mapping: HashMap<Vec<bool>, Vec<bool>> = re.captures_iter(&input).filter_map(|caps| {
         if let (Some(from), Some(to)) = (caps.get(1), caps.get(2)) {
             Some((string_to_grid(from.as_str()), string_to_grid(to.as_str())))

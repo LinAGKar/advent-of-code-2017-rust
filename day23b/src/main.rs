@@ -29,7 +29,9 @@ fn get_val(val: &Value, regs: &HashMap<char, i64>) -> Option<i64> {
 fn main() {
     let mut input = String::new();
     io::stdin().read_to_string(&mut input).unwrap();
-    let re = Regex::new(r"set ([a-h]) ([a-h]|-?\d+)|sub ([a-h]) ([a-h]|-?\d+)|mul ([a-h]) ([a-h]|-?\d+)|jnz ([a-h]|-?\d+) ([a-h]|-?\d+)").unwrap();
+    let re = Regex::new(
+        r"set ([a-h]) ([a-h]|-?\d+)|sub ([a-h]) ([a-h]|-?\d+)|mul ([a-h]) ([a-h]|-?\d+)|jnz ([a-h]|-?\d+) ([a-h]|-?\d+)",
+    ).unwrap();
     let instructions: Vec<Instr> = re.captures_iter(&input).filter_map(|caps| {
         if let (Some(x), Some(y)) = (caps.get(1), caps.get(2)) {
             Some(Instr::Set(x.as_str().chars().next().unwrap(), match y.as_str().parse() {

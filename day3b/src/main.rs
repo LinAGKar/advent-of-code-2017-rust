@@ -33,7 +33,9 @@ impl CoordinateMap {
     }
 
     fn set_to_surrounding_sum(&mut self) {
-        let sum: u64 = (-1..2).map::<u64, _>(|x| (-1..2).filter(|y| (x, *y) != (0, 0)).map(|y| self.get_at(self.x + x, self.y + y)).sum()).sum();
+        let sum: u64 = (-1..2).map::<u64, _>(|x| {
+            (-1..2).filter(|y| (x, *y) != (0, 0)).map(|y| self.get_at(self.x + x, self.y + y)).sum()
+        }).sum();
         self.set(sum)
     }
 
