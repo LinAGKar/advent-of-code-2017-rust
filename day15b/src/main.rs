@@ -10,7 +10,11 @@ impl Iterator for Generator {
     type Item = i64;
 
     fn next(&mut self) -> Option<i64> {
-        self.num = (self.num * self.factor) % 2147483647;
+        self.num = self.num * self.factor;
+        self.num = (self.num & 0x7FFFFFFF) + (self.num >> 31);
+        if self.num >= 0x7FFFFFFF {
+            self.num -= 0x7FFFFFFF;
+        }
         Some(self.num)
     }
 }
