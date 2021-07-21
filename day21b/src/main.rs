@@ -1,111 +1,133 @@
-extern crate regex;
-
-use regex::Regex;
 use std::collections::HashMap;
-use std::io;
 use std::io::Read;
 
-fn string_to_grid(x: &str) -> Vec<bool> {
-    x.chars().filter_map(|x| match x { '#' => Some(true), '.' => Some(false), _ => None }).collect()
+fn rotate((len, grid): (u8, u64)) -> (u8, u64) {
+    (len, (0..len).flat_map(|line| {
+        (0..len).map(move |col| (line, col))
+    }).fold(0, |acc, (line, col)| {
+        acc | (grid >> line * len + col & 0b1) << col * len + len - 1 - line
+    }))
 }
 
-fn rotate(input: &Vec<bool>) -> Vec<bool> {
-    let size_f = (input.len() as f64).sqrt();
-    let size = size_f as usize;
-    if size as f64 != size_f {
-        panic!("Grid is not square");
-    }
-    (0..input.len()).map(|i| {
-        let x = i % size;
-        let y = i / size;
-        let old_x = y;
-        let old_y = size - 1 - x;
-        input[old_y * size + old_x]
-    }).collect()
+fn flip((len, grid): (u8, u64)) -> (u8, u64) {
+    let line_mask = !(!0 << len);
+    (len, (0..len).fold(0, |acc, i| {
+        acc << len | grid >> i * len & line_mask
+    }))
 }
 
-fn flip(input: &Vec<bool>) -> Vec<bool> {
-    let size_f = (input.len() as f64).sqrt();
-    let size = size_f as usize;
-    if size as f64 != size_f {
-        panic!("Grid is not square");
+fn parse_grid(string: &str) -> (u8, u64) {
+    let (len, grid) = string.chars().filter(|x| ['#', '.'].contains(x)).enumerate().fold((0, 0), |(len, grid), (i, tile)| {
+        (len + 1, grid | if tile == '#' { 1 } else { 0 } << i)
+    });
+    let size = (len as f32).sqrt() as u8;
+    assert_eq!(size * size, len);
+    (size, grid)
+}
+
+fn pixel_count(
+    cache: &mut HashMap<((u8, u64), u8), u32>,
+    mappings: &HashMap<(u8, u64), Vec<(u8, u64)>>,
+    source: (u8, u64),
+    depth: u8,
+) -> u32 {
+    if let Some(&val) = cache.get(&(source, depth)) {
+        val
+    } else {
+        let val = if depth == 0 {
+            (0..source.0.pow(2)).map(|i| (source.1 >> i & 0b1) as u32).sum()
+        } else {
+            mappings[&source].iter().map(|&target| {
+                pixel_count(cache, mappings, target, depth - 1)
+            }).sum()
+        };
+        cache.insert((source, depth), val);
+        val
     }
-    (0..input.len()).map(|i| {
-        let x = i % size;
-        let y = i / size;
-        let old_x = size - 1 - x;
-        input[y * size + old_x]
+}
+
+fn fit(
+    mappings: &HashMap<(u8, u64), (u8, u64)>,
+    source: (u8, u64),
+) -> (u8, u64) {
+    (0..8).try_fold(source, |source, i| {
+        let source = if i == 4 { flip(source) } else { source };
+        if mappings.contains_key(&source) {
+            Err(source)
+        } else {
+            Ok(rotate(source))
+        }
+    }).unwrap_err()
+}
+
+fn join(tiles: &[(u8, u64)]) -> (u8, u128) {
+    let side_len = (tiles.len() as f32).sqrt() as u8;
+    assert_eq!(side_len.pow(2) as usize, tiles.len());
+    let tile_size = tiles[0].0;
+
+    let line_mask = !(!0 << tile_size);
+
+    (tile_size * side_len, (0..side_len).flat_map(|x| {
+        (0..side_len).flat_map(move |y| {
+            (0..tile_size).map(move |tile_line| (x, y, tile_line))
+        })
+    }).fold(0u128, |acc, (x, y, tile_line)| {
+        let (this_tile_size, tile) = tiles[(y * side_len + x) as usize];
+        assert_eq!(this_tile_size, tile_size);
+        let line = (tile >> tile_line * tile_size & line_mask) as u128;
+        acc | line << (x + (y * tile_size + tile_line) * side_len) * tile_size
+    }))
+}
+
+fn split((full_size, grid): (u8, u128), tile_size: u8) -> Vec<(u8, u64)> {
+    let side_len = full_size / tile_size;
+    let line_mask = !(!0 << tile_size);
+
+    (0..side_len).flat_map(|y| {
+        (0..side_len).map(move |x| {
+            (tile_size, (0..tile_size).fold(0, |acc, tile_line| {
+                let offset = (x + (y * tile_size + tile_line) * side_len) * tile_size;
+                let line = (grid >> offset & line_mask) as u64;
+                acc | line << tile_size * tile_line
+            }))
+        })
     }).collect()
 }
 
 fn main() {
     let mut input = String::new();
-    io::stdin().read_to_string(&mut input).unwrap();
-    let re = Regex::new(
-        r"(?m)^([.#]{2}/[.#]{2}) => ([.#]{3}(?:/[.#]{3}){2})$|^([.#]{3}(?:/[.#]{3}){2}) => ([.#]{4}(?:/[.#]{4}){3})$",
-    ).unwrap();
-    let mut mapping: HashMap<Vec<bool>, Vec<bool>> = re.captures_iter(&input).filter_map(|caps| {
-        if let (Some(from), Some(to)) = (caps.get(1), caps.get(2)) {
-            Some((string_to_grid(from.as_str()), string_to_grid(to.as_str())))
-        } else if let (Some(from), Some(to)) = (caps.get(3), caps.get(4)) {
-            Some((string_to_grid(from.as_str()), string_to_grid(to.as_str())))
-        } else {
-            None
-        }
+    std::io::stdin().read_to_string(&mut input).unwrap();
+
+    let mappings: HashMap<_, _> = input.lines().map(|line| {
+        let mut words = line.split_whitespace();
+        (parse_grid(words.next().unwrap()), parse_grid(words.nth(1).unwrap()))
     }).collect();
-    let mut to_add = HashMap::new();
-    for (from, to) in &mapping {
-        let mut from = from.to_owned();
-        for _ in 0..3 {
-            from = rotate(&from);
-            if !mapping.contains_key(&from) && !to_add.contains_key(&from) {
-                to_add.insert(from.to_owned(), to.to_owned());
-            }
-        }
-        from = flip(&from);
-        if !mapping.contains_key(&from) && !to_add.contains_key(&from) {
-            to_add.insert(from.to_owned(), to.to_owned());
-        }
-        for _ in 0..3 {
-            from = rotate(&from);
-            if !mapping.contains_key(&from) && !to_add.contains_key(&from) {
-                to_add.insert(from.to_owned(), to.to_owned());
-            }
-        }
+
+    let source = fit(&mappings, parse_grid(".#./..#/###"));
+
+    let mut new_mappings = HashMap::new();
+
+    for (&source, &target_0) in mappings.iter().filter(|(&(source_size, _), _)| source_size == 3) {
+        let target_1 = join(
+            &split((target_0.0, target_0.1 as u128), 2)
+                .into_iter()
+                .map(|tile| mappings[&fit(&mappings, tile)])
+                .collect::<Vec<_>>(),
+        );
+        let target_2 = split(target_1, 2).into_iter().map(|tile| {
+            let new_tile = mappings[&fit(&mappings, tile)];
+            fit(&mappings, (new_tile.0, new_tile.1 as u64))
+        }).collect();
+
+        let source = (source.0, source.1 as u64);
+        let target_0 = (target_0.0, target_0.1 as u64);
+        let target_1 = (target_1.0, target_1.1 as u64);
+
+        new_mappings.insert(source, vec![target_0]);
+        new_mappings.insert(target_0, vec![target_1]);
+        new_mappings.insert(target_1, target_2);
     }
-    mapping.extend(to_add);
-    let mut image = vec![false, true, false, false, false, true, true, true, true];
-    for _ in 0..18 {
-        let size_f = (image.len() as f64).sqrt();
-        let size = size_f as usize;
-        if size as f64 != size_f {
-            panic!("Grid is not square");
-        }
-        let block_size = if size % 2 == 0 { 2 } else { 3 };
-        let new_block_size = block_size + 1;
-        let blocks = size / block_size;
-        let mut new_image = vec![false; (new_block_size * blocks).pow(2)];
-        for i in 0..blocks.pow(2) {
-            let x = i % blocks;
-            let y = i / blocks;
-            let mut old_block = vec![false; block_size.pow(2)];
-            for j in 0..block_size.pow(2) {
-                let block_x = j % block_size;
-                let block_y = j / block_size;
-                let x = x * block_size + block_x;
-                let y = y * block_size + block_y;
-                old_block[j] = image[y * size + x];
-            }
-            let new_block = &mapping[&old_block];
-            for j in 0..new_block_size.pow(2) {
-                let block_x = j % new_block_size;
-                let block_y = j / new_block_size;
-                let x = x * new_block_size + block_x;
-                let y = y * new_block_size + block_y;
-                new_image[y * blocks * new_block_size + x] = new_block[j];
-            }
-        }
-        image = new_image;
-    }
-    println!("{}", image.iter().filter(|&x| *x).count());
+
+    let mut cache = HashMap::new();
+    println!("{}", pixel_count(&mut cache, &new_mappings, (source.0, source.1 as u64), 18));
 }
