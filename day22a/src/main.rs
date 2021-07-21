@@ -6,12 +6,12 @@ fn main() {
     let mut input = String::new();
     io::stdin().read_to_string(&mut input).unwrap();
     let mut infected = HashSet::new();
-    let lines = input.lines().count() as i64;
+    let lines = input.lines().count() as i16;
     for i in input.lines().enumerate() {
-        let columns = i.1.chars().count() as i64;
+        let columns = i.1.chars().count() as i16;
         for j in i.1.chars().enumerate() {
             if j.1 == '#' {
-                infected.insert((j.0 as i64 - columns / 2, i.0 as i64 - lines / 2));
+                infected.insert((j.0 as i16 - columns / 2, i.0 as i16 - lines / 2));
             }
         }
     }
