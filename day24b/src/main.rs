@@ -1,35 +1,64 @@
-extern crate regex;
+use std::io::{Read,stdin};
 
-use regex::Regex;
-use std::cmp::Ordering::Equal;
-use std::io;
-use std::io::Read;
-
-fn longest(comps: &Vec<(u64, u64)>, used: &mut Vec<bool>, end: u64, length: u64) -> (u64, u64) {
-    let to_check: Vec<(usize, &(u64, u64))> = comps
-        .iter()
-        .enumerate()
-        .filter(|&(n, &(a, b))| !used[n] && (a == end || b == end))
-        .collect();
-    to_check.iter().map(|&(n, &(a, b))| {
-        used[n] = true;
-        let (length, strength) = longest(comps, used, if a == end { b } else { a }, length + 1);
-        let strength = a + b + strength;
-        used[n] = false;
-        (length, strength)
-    }).max_by(|&(length_a, strength_a), &(length_b, strength_b)| match length_a.cmp(&length_b) {
-        Equal => strength_a.cmp(&strength_b),
-        x => x,
-    }).unwrap_or((length, 0))
+fn strongest(
+    comps: &Vec<(Vec<u16>, Vec<Vec<usize>>)>,
+    used: &mut Vec<bool>,
+    length: u8,
+    next: &mut dyn Iterator<Item=(usize, usize)>,
+) -> (u8, u16) {
+    next.filter_map(|(index, port_index)| {
+        if !used[index] {
+            let comp = &comps[index];
+            used[index] = true;
+            let (this_len, strength) = strongest(
+                comps, used, length + 1, &mut comp.1[port_index].iter().filter_map(|&i| {
+                    let next_comp = &comps[i];
+                    (0..2).find_map(|j| {
+                        if next_comp.0[j] == comp.0[port_index] {
+                            Some((i, 1 - j))
+                        } else {
+                            None
+                        }
+                    })
+                }),
+            );
+            used[index] = false;
+            Some((this_len, comp.0.iter().sum::<u16>() + strength))
+        } else {
+            None
+        }
+    }).max().unwrap_or((length, 0))
 }
 
 fn main() {
     let mut input = String::new();
-    io::stdin().read_to_string(&mut input).unwrap();
-    let re = Regex::new(r"(?m)^(\d+)/(\d+)$").unwrap();
-    let comps: Vec<(u64, u64)> = re
-        .captures_iter(&input)
-        .map(|caps| (caps[1].parse().unwrap(), caps[2].parse().unwrap()))
-        .collect();
-    println!("{}", longest(&comps, &mut vec![false; comps.len()], 0, 0).1);
+    stdin().read_to_string(&mut input).unwrap();
+
+    let comps: Vec<Vec<u16>> = input.lines().map(|line| {
+        line.split('/').map(|num| num.parse().unwrap()).collect()
+    }).collect();
+    let comps: Vec<_> = comps.iter().enumerate().map(|(i, ports)| {
+        (
+            ports.clone(),
+            ports.iter().map(|port| {
+                comps.iter().enumerate().filter_map(|(j, ports)| if j != i && ports.contains(port) {
+                    Some(j)
+                } else {
+                    None
+                }).collect::<Vec<_>>()
+            }).collect::<Vec<_>>(),
+        )
+    }).collect();
+
+    println!("{}", strongest(
+        &comps, &mut vec![false; comps.len()], 0, &mut comps.iter().enumerate().filter_map(|(i, (ports, _))| {
+            (0..2).find_map(|j| {
+                if ports[j] == 0 {
+                    Some((i, 1 - j))
+                } else {
+                    None
+                }
+            })
+        }),
+    ).1);
 }
